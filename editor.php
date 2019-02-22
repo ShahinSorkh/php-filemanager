@@ -49,7 +49,7 @@ $file_full_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $_GET['file'];
         margin: 0;
         position: absolute;
         left: 0;
-        bottom: 0;
+        bottom: 30px;
         top: 50px;
         right: 0;
     }
@@ -84,6 +84,23 @@ $file_full_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $_GET['file'];
         background-color: #141414;
         color: #e2e2e2;
     }
+    #status {
+        position: absolute;
+        color: #e2e2e2;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 30px;
+        background-color: #232323;
+        box-sizing: border-box;
+        padding-top: 10px;
+        padding-left: 50px;
+        font-family: monospace;
+    }
+    #status a,
+    #status a:visited {
+        color: #e2e2e2;
+    }
     </style>
 </head>
 <body>
@@ -93,6 +110,7 @@ $file_full_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $_GET['file'];
     <input id="filename" type="text" value="<?= $file_full_path ?>" readonly>
   </div>
   <pre id="editor"><?= htmlspecialchars($content) ?></pre>
+  <div id="status">Made with <span style="color: red;">&lt;3</span> on <a href="https://github.com/ShahinSorkh/php-filemanager.git">GitHub</a></div>
   <script src="assets/jquery.min.js"></script>
   <script src="assets/ace/ace.js"></script>
   <script src="assets/ace/ext-language_tools.js"></script>
