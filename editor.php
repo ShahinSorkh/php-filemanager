@@ -25,55 +25,10 @@ if (!is_file($filename)) {
     die_as_error($filename . ' is not a valid file.');
 }
 
-$allowed_file_types = [
-    'javascript', 'typescript', 'css', 'html', 'c', 'cpp', 'h', 'hpp',
-    'py', 'json', 'less', 'sass', 'scss', 'markdown', 'sql', 'text', 'yaml',
-    'xml', 'ini', 'php_laravel_blade', 'sh', 'apache_conf',
-];
 $file_type = pathinfo($filename, PATHINFO_EXTENSION);
 
 define('LOAD_EMMET', in_array($file_type, ['html', 'php']));
 
-switch ($file_type) {
-case 'htaccess':
-    $file_type = 'apache_conf';
-    break;
-case 'yml':
-    $file_type = 'yaml';
-    break;
-case 'js':
-    $file_type = 'javascript';
-    break;
-case 'ts':
-    $file_type = 'typescript';
-    break;
-case 'py':
-    $file_type = 'python';
-    break;
-case 'c':
-case 'cpp':
-case 'h':
-case 'hpp':
-    $file_type = 'c_cpp';
-    break;
-case 'md':
-    $file_type = 'markdown';
-    break;
-case 'txt':
-    $file_type = 'text';
-    break;
-case 'php':
-    $file_type = 'php_laravel_blade';
-    break;
-case 'zsh':
-case 'bash':
-    $file_type = 'sh';
-    break;
-}
-
-if (!in_array($file_type, $allowed_file_types)) {
-    $file_type = 'text';
-}
 $content = file_get_contents($filename);
 $file_full_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $_GET['file'];
 ?>
@@ -141,14 +96,19 @@ $file_full_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $_GET['file'];
   <script src="assets/jquery.min.js"></script>
   <script src="assets/ace/ace.js"></script>
   <script src="assets/ace/ext-language_tools.js"></script>
+  <script src="assets/ace/ext-modelist.js"></script>
   <?php if (LOAD_EMMET): ?><script src="assets/ace/emmet.js"></script><script src="assets/ace/ext-emmet.js"></script><?php endif; ?>
   <script src="assets/ace/theme-twilight.js"></script>
-  <script src="assets/ace/mode-<?= $file_type ?>.js"></script>
   <script>
     ace.require('ace/ext/language_tools');
     var editor = ace.edit('editor');
     editor.setTheme('ace/theme/twilight');
-    editor.session.setMode('ace/mode/<?= $file_type ?>');
+    (function () {
+        var modelist = ace.require("ace/ext/modelist");
+        var mode = modelist.getModeForPath('<?= $filename ?>').mode;
+        console.log(mode);
+        editor.session.setMode(mode || 'ace/mode/text');
+    }());
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
